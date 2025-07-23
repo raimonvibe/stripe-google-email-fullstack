@@ -91,14 +91,14 @@ export default function Home() {
 
   if (status === "loading") {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-amber-100 to-orange-300 dark:from-black dark:to-orange-600 flex items-center justify-center">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-orange-500"></div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-amber-100 to-orange-300 dark:from-black dark:to-orange-600">
       <div className="container mx-auto px-4 py-8">
         <header className="flex justify-between items-center mb-8">
           <div className="flex items-center space-x-3">
