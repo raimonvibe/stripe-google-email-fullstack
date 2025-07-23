@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
       explanation: "In a production app, this would update user progress in the database",
       demo: true
     })
-  } catch (error) {
+  } catch {
     return NextResponse.json({
       message: "Demo: Tutorial progress tracking",
       explanation: "This demonstrates how you might track user progress through tutorials"

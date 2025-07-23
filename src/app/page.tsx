@@ -10,18 +10,12 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { getTutorialStepsWithProgress, updateTutorialProgress, TUTORIAL_STEPS } from "@/lib/tutorial"
 import { 
   Crown, 
-  Shield, 
-  Zap, 
-  Heart, 
-  Trophy,
   Users, 
   Activity, 
   CreditCard, 
   Mail,
   Database,
-  Globe,
   Code,
-  Sparkles,
   ArrowRight,
   CheckCircle,
   Star,
@@ -68,7 +62,7 @@ export default function Home() {
       
       const data = await response.json()
       setEmailStatus(data.message || "Email sent successfully!")
-    } catch (error) {
+    } catch {
       setEmailStatus("Failed to send email")
     } finally {
       setEmailLoading(false)
@@ -278,7 +272,7 @@ export default function Home() {
                     Authentication Success!
                   </h4>
                   <p className="text-gray-600 dark:text-gray-300">
-                    Great! You're already authenticated with Google OAuth. You can see your session data and experience the full authentication flow.
+                    Great! You&apos;re already authenticated with Google OAuth. You can see your session data and experience the full authentication flow.
                   </p>
                   <div className="mt-3 p-3 bg-white dark:bg-gray-800 rounded border">
                     <p className="text-sm"><strong>Name:</strong> {session.user?.name}</p>
