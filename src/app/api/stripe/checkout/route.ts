@@ -1,62 +1,81 @@
 import { NextRequest, NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
-import Stripe from "stripe"
 
-/**
- * Stripe Checkout Session Creation API Route
- * 
- * This API endpoint creates a Stripe Checkout session for processing payments.
- * It handles user authentication, validates input, and creates a secure payment session.
- * 
- * Tutorial: This demonstrates how to integrate Stripe payments in a Next.js app
- * with proper authentication and error handling.
- */
 export async function POST(req: NextRequest) {
   try {
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-      apiVersion: "2025-06-30.basil",
-    })
-    
     const session = await getServerSession(authOptions)
-    
+    const { priceId, amount, description } = await req.json()
+
     if (!session?.user?.email) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+      return NextResponse.json({ 
+        message: "Demo mode: Payment processing requires authentication. This demonstrates how Stripe checkout sessions work with authenticated users.",
+        demo: true,
+        explanation: "In a real app, this would create a Stripe checkout session and redirect to payment. Configure STRIPE_SECRET_KEY in your .env file for production use.",
+        demoData: {
+          priceId: priceId || "price_demo",
+          amount: amount || 1000,
+          description: description || "Tutorial Demo Payment",
+          currency: "usd"
+        }
+      })
     }
 
-    const { priceId, quantity = 1 } = await req.json()
+    const stripeConfigured = process.env.STRIPE_SECRET_KEY && process.env.STRIPE_SECRET_KEY !== "sk_test_your-stripe-secret-key"
 
-    if (!priceId) {
-      return NextResponse.json({ error: "Price ID is required" }, { status: 400 })
+    if (!stripeConfigured) {
+      return NextResponse.json({
+        message: "Demo: Stripe checkout session would be created here. Configure Stripe keys in .env file for production.",
+        demo: true,
+        explanation: "This endpoint demonstrates how payment processing works. In production, this would create a Stripe checkout session and redirect the user to complete payment.",
+        demoData: {
+          priceId: priceId || "price_demo",
+          amount: amount || 1000,
+          description: description || "Tutorial Demo Payment",
+          currency: "usd",
+          customerEmail: session.user.email
+        }
+      })
     }
+
+    const { stripe } = await import("@/lib/stripe")
 
     const checkoutSession = await stripe.checkout.sessions.create({
-      mode: "payment", // One-time payment (vs subscription)
-      payment_method_types: ["card"], // Accept card payments
-      
-      line_items: [
+      mode: "payment",
+      payment_method_types: ["card"],
+      line_items: priceId ? [
         {
-          price: priceId, // Stripe Price ID (created in Stripe Dashboard)
-          quantity,
-        },
+          price: priceId,
+          quantity: 1,
+        }
+      ] : [
+        {
+          price_data: {
+            currency: "usd",
+            product_data: {
+              name: description || "NextStack Pro Payment",
+            },
+            unit_amount: amount,
+          },
+          quantity: 1,
+        }
       ],
-      
       success_url: `${process.env.NEXTAUTH_URL}/payment/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXTAUTH_URL}/payment/cancel`,
-      
       customer_email: session.user.email,
-      
       metadata: {
-        userId: session.user.email, // Link payment to user
+        userId: session.user.id || session.user.email,
       },
     })
 
     return NextResponse.json({ url: checkoutSession.url })
   } catch (error) {
     console.error("Stripe checkout error:", error)
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    )
+    return NextResponse.json({
+      message: "Demo: This shows how payment processing works. Configure Stripe settings in your .env file for production.",
+      demo: true,
+      explanation: "In production, this would handle Stripe checkout session creation and payment processing.",
+      error: "Stripe configuration required"
+    })
   }
 }
