@@ -102,11 +102,11 @@ export default function Home() {
       <div className="container mx-auto px-4 py-8">
         <header className="flex justify-between items-center mb-8">
           <div className="flex items-center space-x-3">
-            <div className="p-2 bg-gradient-to-r from-orange-500 to-pink-500 rounded-lg">
+            <div className="p-2 bg-gradient-to-r from-orange-500 to-amber-300 dark:from-orange-600 dark:to-black rounded-lg">
               <Crown className="h-8 w-8 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-pink-600 bg-clip-text text-transparent">
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-orange-600 to-amber-500 dark:from-orange-400 dark:to-gray-100 bg-clip-text text-transparent">
                 NextStack Pro
               </h1>
               <p className="text-sm text-gray-600 dark:text-gray-400">Interactive Fullstack Tutorial</p>
@@ -129,7 +129,7 @@ export default function Home() {
         </header>
 
         <div className="space-y-8">
-          <Card className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 text-white border-0 shadow-2xl">
+          <Card className="bg-gradient-to-r from-orange-500 via-amber-400 to-orange-300 dark:from-orange-600 dark:via-black dark:to-orange-800 text-white border-0 shadow-2xl">
             <CardHeader className="text-center pb-8">
               <div className="mx-auto mb-4 p-4 bg-white/20 rounded-full backdrop-blur-sm">
                 <BookOpen className="h-12 w-12" />
@@ -218,7 +218,7 @@ export default function Home() {
               </div>
 
               {currentStep.id === 'payments' && (
-                <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 p-6 rounded-lg">
+                <div className="bg-gradient-to-r from-amber-50 to-orange-100 dark:from-orange-900/20 dark:to-black/20 p-6 rounded-lg">
                   <h4 className="font-semibold text-lg mb-3 flex items-center">
                     <Play className="h-5 w-5 mr-2 text-green-600" />
                     Interactive Demo: Payment Processing
@@ -235,7 +235,7 @@ export default function Home() {
               )}
 
               {currentStep.id === 'email' && (
-                <div className="bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 p-6 rounded-lg">
+                <div className="bg-gradient-to-r from-amber-50 to-orange-100 dark:from-orange-900/20 dark:to-black/20 p-6 rounded-lg">
                   <h4 className="font-semibold text-lg mb-3 flex items-center">
                     <Play className="h-5 w-5 mr-2 text-blue-600" />
                     Interactive Demo: Email System
@@ -247,7 +247,7 @@ export default function Home() {
                     <Button 
                       onClick={sendWelcomeEmail}
                       disabled={emailLoading}
-                      className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600"
+                      className="bg-gradient-to-r from-orange-500 to-amber-300 hover:from-orange-600 hover:to-amber-400 dark:from-orange-600 dark:to-black dark:hover:from-orange-700 dark:hover:to-gray-900"
                     >
                       {emailLoading ? (
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
@@ -266,7 +266,7 @@ export default function Home() {
               )}
 
               {currentStep.id === 'authentication' && session && (
-                <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 p-6 rounded-lg">
+                <div className="bg-gradient-to-r from-amber-50 to-orange-100 dark:from-orange-900/20 dark:to-black/20 p-6 rounded-lg">
                   <h4 className="font-semibold text-lg mb-3 flex items-center">
                     <CheckCircle className="h-5 w-5 mr-2 text-green-600" />
                     Authentication Success!
@@ -294,7 +294,7 @@ export default function Home() {
 
                 <Button
                   onClick={() => handleStepComplete(currentStep.id)}
-                  className="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600"
+                  className="bg-gradient-to-r from-orange-500 to-amber-300 hover:from-orange-600 hover:to-amber-400 dark:from-orange-600 dark:to-black dark:hover:from-orange-700 dark:hover:to-gray-900"
                   disabled={tutorialSteps[currentTutorialStep]?.completed}
                 >
                   {tutorialSteps[currentTutorialStep]?.completed ? (
@@ -334,7 +334,7 @@ export default function Home() {
           <Card className="shadow-xl border-0 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
             <CardHeader>
               <div className="flex items-center space-x-3">
-                <div className="p-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg">
+                <div className="p-2 bg-gradient-to-r from-orange-500 to-amber-300 dark:from-orange-600 dark:to-black rounded-lg">
                   <Code className="h-6 w-6 text-white" />
                 </div>
                 <div>
