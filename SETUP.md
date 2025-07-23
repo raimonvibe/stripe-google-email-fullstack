@@ -186,28 +186,73 @@ Visit [http://localhost:3000](http://localhost:3000)
 
 #### "Module not found" errors
 ```bash
-rm -rf node_modules package-lock.json
+# Clear cache and reinstall dependencies
+rm -rf node_modules package-lock.json .next
 npm install
+npm run build
 ```
 
 #### Database connection issues
 ```bash
+# Reset database and regenerate client
 npx prisma db push --force-reset
 npx prisma generate
+npx prisma studio  # Verify database structure
 ```
 
 #### Google OAuth "redirect_uri_mismatch"
 - Verify the redirect URI in Google Cloud Console exactly matches:
   `http://localhost:3000/api/auth/callback/google`
+- For production, add your production domain:
+  `https://yourdomain.com/api/auth/callback/google`
+- Ensure OAuth consent screen is properly configured
+- Check that Google+ API is enabled in your project
 
 #### Stripe webhook not receiving events
 - Make sure your local server is running on port 3000
-- For production, use a tool like ngrok to expose your local server
+- For local testing, use Stripe CLI: `stripe listen --forward-to localhost:3000/api/stripe/webhook`
+- Verify webhook endpoint URL in Stripe Dashboard
+- Check webhook signing secret matches your environment variable
+- For production, ensure webhook endpoint is publicly accessible
 
 #### Email not sending
-- Verify SMTP credentials are correct
+- Verify SMTP credentials are correct in `.env.local`
 - For Gmail, ensure you're using an app password, not your regular password
-- Check spam folder
+- Check spam folder for test emails
+- Verify EMAIL_HOST and EMAIL_PORT settings for your provider
+- Test SMTP connection: `telnet smtp.gmail.com 587`
+
+#### NextAuth.js session issues
+- Verify NEXTAUTH_SECRET is set and secure (use `openssl rand -base64 32`)
+- Check NEXTAUTH_URL matches your current domain
+- Clear browser cookies and localStorage
+- Verify database schema includes NextAuth tables
+
+#### Build and deployment errors
+- Check TypeScript errors: `npm run type-check`
+- Verify all environment variables are set in production
+- Ensure database is accessible from production environment
+- Check build logs for specific error messages
+
+### Advanced Troubleshooting
+
+#### Performance Issues
+- Use Next.js built-in performance monitoring
+- Check database query performance with Prisma query logs
+- Monitor API response times and optimize slow endpoints
+- Use browser dev tools to identify client-side bottlenecks
+
+#### Security Concerns
+- Regularly update dependencies: `npm audit fix`
+- Verify HTTPS is enabled in production
+- Check CSP headers and security configurations
+- Monitor for suspicious authentication attempts
+
+#### Database Migration Issues
+- Always backup production data before migrations
+- Test migrations in staging environment first
+- Use `npx prisma migrate diff` to preview changes
+- Keep migration files in version control
 
 ### Environment Variables Checklist
 
@@ -234,12 +279,183 @@ If you're still having issues:
 3. Verify all environment variables are set correctly
 4. Ensure all third-party services (Google, Stripe) are configured properly
 
+## Advanced Configuration
+
+### Production Database Setup
+
+For production, consider upgrading from SQLite to PostgreSQL:
+
+```bash
+# Install PostgreSQL adapter
+npm install @prisma/adapter-pg pg
+npm install -D @types/pg
+
+# Update schema.prisma
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+# Run migration
+npx prisma migrate dev --name init
+```
+
+### Security Hardening
+
+#### Environment Variables Security
+```bash
+# Use strong secrets
+NEXTAUTH_SECRET=$(openssl rand -base64 32)
+
+# Restrict CORS origins
+ALLOWED_ORIGINS="https://yourdomain.com,https://www.yourdomain.com"
+
+# Enable security headers
+ENABLE_CSP=true
+```
+
+#### Rate Limiting Setup
+```typescript
+// middleware.ts
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+
+export function middleware(request: NextRequest) {
+  // Implement rate limiting logic
+  const ip = request.ip ?? '127.0.0.1'
+  // Add rate limiting implementation
+}
+```
+
+### Performance Optimization
+
+#### Database Optimization
+```typescript
+// Enable query logging
+const prisma = new PrismaClient({
+  log: ['query', 'info', 'warn', 'error'],
+})
+
+// Use connection pooling
+DATABASE_URL="postgresql://user:pass@host:5432/db?connection_limit=20&pool_timeout=20"
+```
+
+#### Caching Strategy
+```typescript
+// API route caching
+export async function GET() {
+  return NextResponse.json(data, {
+    headers: {
+      'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300'
+    }
+  })
+}
+```
+
+### Monitoring and Analytics
+
+#### Error Tracking Setup
+```bash
+npm install @sentry/nextjs
+
+# sentry.client.config.js
+import * as Sentry from "@sentry/nextjs"
+
+Sentry.init({
+  dsn: process.env.SENTRY_DSN,
+  tracesSampleRate: 1.0,
+})
+```
+
+#### Performance Monitoring
+```typescript
+// lib/analytics.ts
+export function trackEvent(eventName: string, properties?: Record<string, any>) {
+  if (typeof window !== 'undefined') {
+    // Implement analytics tracking
+    gtag('event', eventName, properties)
+  }
+}
+```
+
+## Testing Setup
+
+### Unit Testing Configuration
+```bash
+npm install -D jest @testing-library/react @testing-library/jest-dom
+npm install -D jest-environment-jsdom
+
+# jest.config.js
+const nextJest = require('next/jest')
+
+const createJestConfig = nextJest({
+  dir: './',
+})
+
+const customJestConfig = {
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
+  moduleNameMapping: {
+    '^@/(.*)$': '<rootDir>/src/$1',
+  },
+  testEnvironment: 'jest-environment-jsdom',
+}
+
+module.exports = createJestConfig(customJestConfig)
+```
+
+### End-to-End Testing
+```bash
+npm install -D @playwright/test
+
+# playwright.config.ts
+import { defineConfig } from '@playwright/test'
+
+export default defineConfig({
+  testDir: './e2e',
+  use: {
+    baseURL: 'http://localhost:3000',
+  },
+  webServer: {
+    command: 'npm run dev',
+    port: 3000,
+  },
+})
+```
+
 ## Next Steps
 
 Once everything is working:
+
+### Beginner Next Steps
 1. Explore the codebase to understand how each feature works
-2. Try modifying the UI components
-3. Add new features like user profiles or subscription management
-4. Deploy to production using Vercel or another platform
+2. Try modifying the UI components and styling
+3. Add simple features like user profile editing
+4. Experiment with different email templates
+
+### Intermediate Next Steps
+1. Implement user roles and permissions system
+2. Add subscription management with Stripe
+3. Create admin dashboard for user management
+4. Implement real-time features with WebSockets
+
+### Advanced Next Steps
+1. Set up comprehensive monitoring and alerting
+2. Implement advanced caching strategies
+3. Add internationalization (i18n) support
+4. Create mobile app with React Native
+5. Implement microservices architecture
+6. Add advanced analytics and reporting
+
+### Production Deployment Checklist
+- [ ] Environment variables configured
+- [ ] Database migrations applied
+- [ ] SSL certificates installed
+- [ ] Domain DNS configured
+- [ ] Monitoring and alerting set up
+- [ ] Backup strategy implemented
+- [ ] Security headers configured
+- [ ] Performance optimization applied
+- [ ] Error tracking enabled
+- [ ] Load testing completed
 
 Happy coding! 🚀
