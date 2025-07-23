@@ -2,6 +2,11 @@
 
 A comprehensive tutorial application demonstrating modern fullstack development with Next.js, featuring Google OAuth authentication, Stripe payments, email automation, and database management.
 
+## 🌐 Live Demo
+**[🚀 Visit Stripe/Google/Email Full-stack tutorial](https://stripe-google-email-fullstack.vercel.app/)**
+
+![ Stripe/Google/Email Full-stack tutorial](./stripe-google-email.png)
+
 ## 🎯 What You'll Learn
 
 This tutorial teaches you to build a production-ready fullstack application with:
