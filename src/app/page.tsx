@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { GoogleSignIn } from "@/components/auth/google-signin"
 import { CheckoutButton } from "@/components/stripe/checkout-button"
 import { ThemeToggle } from "@/components/theme-toggle"
+import { Footer } from "@/components/footer"
 import { getTutorialStepsWithProgress, updateTutorialProgress, TUTORIAL_STEPS } from "@/lib/tutorial"
 import { 
   Crown, 
@@ -438,6 +439,7 @@ export default function Home() {
           )}
         </div>
       </div>
+      <Footer />
     </div>
   )
 }
