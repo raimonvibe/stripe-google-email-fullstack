@@ -101,7 +101,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-100 to-orange-300 dark:from-black dark:to-orange-600">
       <div className="container mx-auto px-4 py-8">
-        <header className="flex justify-between items-center mb-8">
+        <header className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-8 space-y-4 sm:space-y-0">
           <div className="flex items-center space-x-3">
             <div className="p-2 bg-gradient-to-r from-orange-500 to-amber-300 dark:from-orange-600 dark:to-black rounded-lg">
               <Crown className="h-8 w-8 text-white" />
@@ -113,15 +113,17 @@ export default function Home() {
               <p className="text-sm text-gray-600 dark:text-gray-400">Interactive Fullstack Tutorial</p>
             </div>
           </div>
-          <div className="flex items-center space-x-4">
+          <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4 w-full sm:w-auto">
             <ThemeToggle />
-            <GoogleSignIn />
+            <div className="w-full sm:w-auto">
+              <GoogleSignIn />
+            </div>
             {session && (
               <Button
                 onClick={() => signOut()}
                 variant="outline"
                 size="sm"
-                className="flex items-center space-x-2"
+                className="flex items-center space-x-2 w-full sm:w-auto"
               >
                 <span>Sign Out</span>
               </Button>
@@ -282,12 +284,12 @@ export default function Home() {
                 </div>
               )}
 
-              <div className="flex justify-between items-center pt-6 border-t">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center pt-6 border-t space-y-4 sm:space-y-0">
                 <Button
                   onClick={prevStep}
                   disabled={currentTutorialStep === 0}
                   variant="outline"
-                  className="flex items-center space-x-2"
+                  className="flex items-center justify-center space-x-2 w-full sm:w-auto"
                 >
                   <ChevronLeft className="h-4 w-4" />
                   <span>Previous</span>
@@ -295,7 +297,7 @@ export default function Home() {
 
                 <Button
                   onClick={() => handleStepComplete(currentStep.id)}
-                  className="bg-gradient-to-r from-orange-500 to-amber-300 hover:from-orange-600 hover:to-amber-400 dark:from-orange-600 dark:to-black dark:hover:from-orange-700 dark:hover:to-gray-900"
+                  className="bg-gradient-to-r from-orange-500 to-amber-300 hover:from-orange-600 hover:to-amber-400 dark:from-orange-600 dark:to-black dark:hover:from-orange-700 dark:hover:to-gray-900 w-full sm:w-auto order-first sm:order-none"
                   disabled={tutorialSteps[currentTutorialStep]?.completed}
                 >
                   {tutorialSteps[currentTutorialStep]?.completed ? (
@@ -314,7 +316,7 @@ export default function Home() {
                 <Button
                   onClick={nextStep}
                   disabled={currentTutorialStep === TUTORIAL_STEPS.length - 1}
-                  className="flex items-center space-x-2"
+                  className="flex items-center justify-center space-x-2 w-full sm:w-auto"
                 >
                   <span>Next</span>
                   <ChevronRight className="h-4 w-4" />
