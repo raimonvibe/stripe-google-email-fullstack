@@ -1,0 +1,1 @@
+"use strict";exports.id=706,exports.ids=[706],exports.modules={96706:(a,b,c)=>{c.d(b,{stripe:()=>e});var d=c(97877);if(!process.env.STRIPE_SECRET_KEY)throw Error("STRIPE_SECRET_KEY is not set in environment variables");let e=new d.A(process.env.STRIPE_SECRET_KEY,{apiVersion:"2025-06-30.basil",typescript:!0})}};

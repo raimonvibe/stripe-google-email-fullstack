@@ -1,0 +1,12 @@
+{
+  "/api/auth/[...nextauth]/route": "/api/auth/[...nextauth]",
+  "/_not-found/page": "/_not-found",
+  "/api/send-email/route": "/api/send-email",
+  "/api/stripe/webhook/route": "/api/stripe/webhook",
+  "/api/stripe/checkout/route": "/api/stripe/checkout",
+  "/api/tutorial/progress/route": "/api/tutorial/progress",
+  "/favicon.ico/route": "/favicon.ico",
+  "/page": "/",
+  "/payment/cancel/page": "/payment/cancel",
+  "/payment/success/page": "/payment/success"
+}
